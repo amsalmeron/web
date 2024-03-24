@@ -1,14 +1,14 @@
 import { getRssString } from '@astrojs/rss';
 
-import { SITE, METADATA, APP_BLOG } from '~/utils/config';
+import { SITE, BLOG } from '~/config.mjs';
 import { fetchPosts } from '~/utils/blog';
 import { getPermalink } from '~/utils/permalinks';
 
 export const GET = async () => {
-  if (!APP_BLOG.isEnabled) {
+  if (!BLOG.disabled) {
     return new Response(null, {
       status: 404,
-      statusText: 'Not found',
+      statusText: 'Content not found',
     });
   }
 
@@ -16,7 +16,7 @@ export const GET = async () => {
 
   const rss = await getRssString({
     title: `${SITE.name}’s Blog`,
-    description: METADATA?.description || '',
+    description: SITE.description || '',
     site: import.meta.env.SITE,
 
     items: posts.map((post) => ({
